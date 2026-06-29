@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpecDuel — Laptop Comparison</title>
+<style>
+  :root {
+    --bg: #1a1d23;
+    --surface: #22262f;
+    --surface2: #2a2f3a;
+    --surface3: #323845;
+    --border: #3a4154;
+    --accent: #5b8dee;
+    --accent2: #7c6ef0;
+    --accent-dim: rgba(91,141,238,0.12);
+    --text: #e4e8f0;
+    --text-dim: #8892a4;
+    --text-muted: #555e70;
+    --green: #3ecf8e;
+    --red: #f06b6b;
+    --yellow: #f5c842;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.35);
+    --font: 'Inter', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ===== AUTH ===== */
+  #auth-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--bg);
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(91,141,238,0.08) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 20%, rgba(124,110,240,0.06) 0%, transparent 50%);
+  }
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 48px 44px; width: 420px; max-width: 95vw;
+    box-shadow: var(--shadow);
+  }
+  .auth-logo {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 32px;
+  }
+  .auth-logo .logo-icon {
+    width: 38px; height: 38px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .auth-logo span { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .auth-logo span em { color: var(--accent); font-style: normal; }
+  .auth-tabs { display: flex; gap: 4px; background: var(--surface2); border-radius: 8px; padding: 4px; margin-bottom: 28px; }
+  .auth-tab {
+    flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-dim);
+    border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all .2s;
+  }
+  .auth-tab.active { background: var(--surface3); color: var(--text); }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 7px; font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text); font-size: 14px; outline: none; transition: border .2s;
+    font-family: var(--font);
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group select option { background: var(--surface2); }
+  .btn-primary {
+    width: 100%; padding: 11px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--radius-sm); color: #fff; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: opacity .2s; margin-top: 4px;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .auth-error { color: var(--red); font-size: 13px; margin-top: 10px; text-align: center; display: none; }
+
+  /* ===== APP ===== */
+  #app { display: none; }
+
+  /* HEADER */
+  .header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 28px; height: 60px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+  .header-logo .logo-icon {
+    width: 30px; height: 30px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .header-logo span { font-size: 18px; font-weight: 700; color: var(--text); }
+  .header-logo span em { color: var(--accent); font-style: normal; }
+  .header-nav { display: flex; gap: 4px; }
+  .nav-btn {
+    padding: 7px 14px; border: none; background: transparent; color: var(--text-dim);
+    border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; font-weight: 500;
+    transition: all .2s; display: flex; align-items: center; gap: 6px;
+  }
+  .nav-btn:hover, .nav-btn.active { background: var(--accent-dim); color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .compare-badge {
+    position: relative; padding: 7px 14px; background: var(--accent-dim); border: 1px solid var(--accent);
+    border-radius: var(--radius-sm); color: var(--accent); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 7px;
+  }
+  .compare-badge:hover { background: var(--accent); color: #fff; }
+  .compare-count {
+    background: var(--accent); color: #fff; border-radius: 50%; width: 18px; height: 18px;
+    font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700;
+  }
+  .compare-badge:hover .compare-count { background: rgba(255,255,255,0.25); }
+  .user-btn {
+    display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer; color: var(--text); font-size: 13px;
+  }
+  .user-avatar {
+    width: 26px; height: 26px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* MAIN */
+  .main { padding: 28px; max-width: 1400px; margin: 0 auto; }
+
+  /* PAGE SECTIONS */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== DASHBOARD ===== */
+  .page-title { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .page-sub { color: var(--text-dim); font-size: 14px; margin-bottom: 28px; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+  .stat-icon { font-size: 22px; margin-bottom: 12px; }
+  .stat-value { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .stat-label { color: var(--text-dim); font-size: 13px; }
+
+  .category-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 28px; }
+  .cat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px 14px; text-align: center; cursor: pointer; transition: all .2s;
+  }
+  .cat-card:hover, .cat-card.active { border-color: var(--accent); background: var(--accent-dim); }
+  .cat-icon { font-size: 24px; margin-bottom: 8px; }
+  .cat-name { font-size: 13px; font-weight: 600; color: var(--text-dim); }
+  .cat-card.active .cat-name { color: var(--accent); }
+
+  /* ===== LAPTOP LIST ===== */
+  .list-controls {
+    display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;
+  }
+  .search-box {
+    flex: 1; min-width: 200px; position: relative;
+  }
+  .search-box input {
+    width: 100%; padding: 9px 14px 9px 38px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text); font-size: 14px; outline: none; transition: border .2s;
+  }
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 15px; }
+  .filter-select {
+    padding: 9px 14px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text); font-size: 14px; outline: none; cursor: pointer;
+  }
+  .filter-select:focus { border-color: var(--accent); }
+  .filter-select option { background: var(--surface2); }
+  .btn-add {
+    padding: 9px 18px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--radius-sm); color: #fff; font-size: 14px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; transition: opacity .2s;
+  }
+  .btn-add:hover { opacity: 0.85; }
+
+  /* TABLE */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 900px; }
+  th {
+    padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border);
+    background: var(--surface2); white-space: nowrap;
+  }
+  td { padding: 13px 16px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .brand-badge {
+    display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    background: var(--accent-dim); color: var(--accent);
+  }
+  .rating-bar { display: flex; align-items: center; gap: 8px; }
+  .rating-fill { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .rating-num { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+  .price-text { font-weight: 600; color: var(--green); }
+  .action-btns { display: flex; gap: 6px; }
+  .btn-icon {
+    width: 30px; height: 30px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface2); color: var(--text-dim); cursor: pointer; display: flex;
+    align-items: center; justify-content: center; font-size: 15px; transition: all .2s;
+  }
+  .btn-icon:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .btn-icon.danger:hover { border-color: var(--red); color: var(--red); background: rgba(240,107,107,0.1); }
+  .btn-icon.compare-add { }
+  .btn-icon.compare-add.in-box { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+  .pagination { display: flex; gap: 6px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .page-btn {
+    width: 34px; height: 34px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--text-dim); cursor: pointer; font-size: 13px; transition: all .2s;
+  }
+  .page-btn:hover, .page-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 200;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(3px);
+  }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    width: 560px; max-width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow);
+  }
+  .modal-header {
+    padding: 22px 24px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; }
+  .modal-close {
+    width: 30px; height: 30px; border: none; background: var(--surface2); color: var(--text-dim);
+    border-radius: 6px; cursor: pointer; font-size: 18px; line-height: 1; transition: all .2s;
+  }
+  .modal-close:hover { background: var(--surface3); color: var(--text); }
+  .modal-body { padding: 24px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-secondary {
+    padding: 9px 18px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text); font-size: 14px; cursor: pointer; transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-save {
+    padding: 9px 20px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--radius-sm); color: #fff; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .btn-save:hover { opacity: 0.85; }
+
+  /* ===== COMPARE BOX ===== */
+  .compare-drawer {
+    position: fixed; right: 0; bottom: 0; top: 60px; width: 400px; z-index: 150;
+    background: var(--surface); border-left: 1px solid var(--border);
+    transform: translateX(100%); transition: transform .3s ease;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .compare-drawer.open { transform: translateX(0); }
+  .drawer-header {
+    padding: 18px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .drawer-title { font-size: 15px; font-weight: 700; }
+  .drawer-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 20px; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 16px; }
+  .compare-slots { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .compare-slot {
+    background: var(--surface2); border: 1px dashed var(--border); border-radius: var(--radius);
+    padding: 14px; min-height: 72px; display: flex; align-items: center; gap: 12px;
+  }
+  .compare-slot.filled { border-style: solid; border-color: var(--accent); }
+  .slot-empty { color: var(--text-muted); font-size: 13px; }
+  .slot-info { flex: 1; }
+  .slot-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .slot-brand { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .slot-remove {
+    width: 24px; height: 24px; border: none; background: rgba(240,107,107,0.15);
+    color: var(--red); border-radius: 5px; cursor: pointer; font-size: 14px; flex-shrink: 0;
+  }
+  .compare-hint { font-size: 12px; color: var(--text-dim); text-align: center; margin-bottom: 16px; }
+  .btn-compare-go {
+    width: 100%; padding: 12px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: var(--radius-sm); color: #fff; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .btn-compare-go:hover { opacity: 0.85; }
+  .btn-compare-go:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ===== COMPARE RESULT ===== */
+  .compare-result-wrap { overflow-x: auto; }
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th, .compare-table td {
+    padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px;
+  }
+  .compare-table th { background: var(--surface2); font-weight: 600; min-width: 160px; }
+  .compare-table .spec-label { color: var(--text-dim); font-size: 13px; font-weight: 500; }
+  .compare-table .laptop-header { text-align: center; }
+  .laptop-header-name { font-weight: 700; font-size: 13px; line-height: 1.3; margin-bottom: 4px; }
+  .laptop-header-brand { font-size: 12px; color: var(--accent); }
+  .compare-table td { text-align: center; }
+  .compare-table .spec-label { text-align: left; }
+  .winner { background: rgba(62,207,142,0.1); color: var(--green); font-weight: 700; }
+  .highlight-row td { background: var(--surface2); }
+
+  /* TOAST */
+  .toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 300; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .toast {
+    padding: 11px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
+    animation: slideUp .3s ease; white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .toast.success { background: var(--green); color: #fff; }
+  .toast.error { background: var(--red); color: #fff; }
+  .toast.info { background: var(--accent); color: #fff; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* DETAIL */
+  .detail-header { display: flex; gap: 24px; margin-bottom: 28px; align-items: flex-start; flex-wrap: wrap; }
+  .detail-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
+  .detail-name { font-size: 22px; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+  .detail-price { font-size: 26px; font-weight: 700; color: var(--green); }
+  .spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .spec-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 16px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .spec-icon { font-size: 20px; flex-shrink: 0; }
+  .spec-key { font-size: 12px; color: var(--text-dim); margin-bottom: 3px; }
+  .spec-val { font-size: 14px; font-weight: 600; }
+  .back-btn {
+    padding: 8px 16px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text); font-size: 14px; cursor: pointer;
+    margin-bottom: 20px; transition: all .2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 60px 20px; }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .empty-sub { color: var(--text-dim); font-size: 14px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .category-grid { grid-template-columns: repeat(3, 1fr); }
+    .compare-drawer { width: 100%; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .header { padding: 0 16px; }
+    .main { padding: 16px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .category-grid { grid-template-columns: repeat(2, 1fr); }
+    .header-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon">⚡</div>
+      <span>Spec<em>Duel</em></span>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Masuk</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Daftar</button>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="Masukkan username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="Masukkan password" />
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Masuk</button>
+      <div class="auth-error" id="login-error">Username atau password salah.</div>
+      <p style="color:var(--text-muted);font-size:12px;margin-top:14px;text-align:center;">Demo: <strong style="color:var(--text-dim)">admin / admin123</strong></p>
+    </div>
+    <div id="register-form" style="display:none">
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="reg-name" placeholder="Nama kamu" />
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="reg-user" placeholder="Buat username unik" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="reg-pass" placeholder="Min. 6 karakter" />
+      </div>
+      <button class="btn-primary" onclick="doRegister()">Buat Akun</button>
+      <div class="auth-error" id="reg-error">-</div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="header">
+    <a class="header-logo" href="#">
+      <div class="logo-icon">⚡</div>
+      <span>Spec<em>Duel</em></span>
+    </a>
+    <nav class="header-nav">
+      <button class="nav-btn active" data-page="dashboard" onclick="goPage('dashboard',this)">🏠 Dashboard</button>
+      <button class="nav-btn" data-page="laptops" onclick="goPage('laptops',this)">💻 Semua Laptop</button>
+      <button class="nav-btn" data-page="categories" onclick="goPage('categories',this)">📂 Kategori</button>
+    </nav>
+    <div class="header-right">
+      <div class="compare-badge" onclick="toggleDrawer()">
+        ⚖️ Compare Box <span class="compare-count" id="compare-count-badge">0</span>
+      </div>
+      <div class="user-btn">
+        <div class="user-avatar" id="user-avatar-txt">A</div>
+        <span id="user-display-name">Admin</span>
+        <span style="cursor:pointer;margin-left:4px;color:var(--text-muted)" onclick="doLogout()">⏏</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- DASHBOARD PAGE -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">Selamat datang di SpecDuel — platform perbandingan spesifikasi laptop.</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">💻</div>
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Laptop</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🏷️</div>
+          <div class="stat-value" id="stat-brands">0</div>
+          <div class="stat-label">Brand</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value" id="stat-avgrating">0</div>
+          <div class="stat-label">Rata-rata Rating</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-value" id="stat-avgprice">-</div>
+          <div class="stat-label">Rata-rata Harga (₹)</div>
+        </div>
+      </div>
+      <div class="page-title" style="font-size:16px;margin-bottom:14px;">Kategori Kebutuhan</div>
+      <div class="category-grid" id="cat-grid-dash"></div>
+      <div class="page-title" style="font-size:16px;margin-bottom:14px;margin-top:28px;">Laptop Terbaru</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Laptop</th>
+              <th>Brand</th>
+              <th>Harga</th>
+              <th>Rating</th>
+              <th>RAM / Storage</th>
+            </tr>
+          </thead>
+          <tbody id="dash-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LAPTOPS PAGE -->
+    <div class="page" id="page-laptops">
+      <div class="page-title">Semua Laptop</div>
+      <div class="page-sub">Kelola data laptop — tambah, edit, hapus, dan bandingkan.</div>
+      <div class="list-controls">
+        <div class="search-box">
+          <span class="icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Cari nama atau brand..." oninput="renderLaptopTable()" />
+        </div>
+        <select class="filter-select" id="filter-brand" onchange="renderLaptopTable()">
+          <option value="">Semua Brand</option>
+        </select>
+        <select class="filter-select" id="filter-sort" onchange="renderLaptopTable()">
+          <option value="">Urutkan: Default</option>
+          <option value="price-asc">Harga: Terendah</option>
+          <option value="price-desc">Harga: Tertinggi</option>
+          <option value="rating-desc">Rating: Terbaik</option>
+          <option value="name-asc">Nama: A-Z</option>
+        </select>
+        <button class="btn-add" onclick="openAddModal()">+ Tambah Laptop</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Laptop</th>
+              <th>Brand</th>
+              <th>Harga (₹)</th>
+              <th>Rating</th>
+              <th>RAM</th>
+              <th>Storage</th>
+              <th>GPU</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="laptop-table"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- CATEGORIES PAGE -->
+    <div class="page" id="page-categories">
+      <div class="page-title">Laptop per Kategori</div>
+      <div class="page-sub">Filter laptop berdasarkan kategori kebutuhan.</div>
+      <div class="category-grid" id="cat-grid-main" style="margin-bottom:24px;"></div>
+      <div class="list-controls">
+        <div class="search-box">
+          <span class="icon">🔍</span>
+          <input type="text" id="cat-search" placeholder="Cari laptop..." oninput="renderCatTable()" />
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Laptop</th>
+              <th>Brand</th>
+              <th>Harga (₹)</th>
+              <th>Rating</th>
+              <th>Processor</th>
+              <th>RAM / Storage</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="cat-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DETAIL PAGE -->
+    <div class="page" id="page-detail">
+      <button class="back-btn" onclick="goBack()">← Kembali</button>
+      <div id="detail-content"></div>
+    </div>
+
+    <!-- COMPARE RESULT PAGE -->
+    <div class="page" id="page-compare">
+      <button class="back-btn" onclick="goBack()">← Kembali</button>
+      <div class="page-title">Hasil Perbandingan</div>
+      <div class="page-sub" id="compare-sub"></div>
+      <div class="compare-result-wrap" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:auto;">
+        <table class="compare-table" id="compare-result-table"></table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- COMPARE DRAWER -->
+<div class="compare-drawer" id="compare-drawer">
+  <div class="drawer-header">
+    <span class="drawer-title">⚖️ Compare Box</span>
+    <button class="drawer-close" onclick="toggleDrawer()">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="compare-slots" id="compare-slots"></div>
+    <div class="compare-hint" id="compare-hint-text">Pilih 2–3 laptop untuk dibandingkan.</div>
+    <button class="btn-compare-go" id="compare-go-btn" onclick="doCompare()" disabled>Bandingkan Sekarang</button>
+    <button class="btn-secondary" style="width:100%;margin-top:10px;" onclick="clearCompareBox()">🗑 Kosongkan</button>
+  </div>
+</div>
+
+<!-- LAPTOP MODAL -->
+<div class="modal-overlay" id="laptop-modal" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Tambah Laptop</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="modal-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Brand *</label>
+          <input type="text" id="m-brand" placeholder="contoh: Asus" />
+        </div>
+        <div class="form-group">
+          <label>Nama Laptop *</label>
+          <input type="text" id="m-name" placeholder="Nama lengkap laptop" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Harga (₹) *</label>
+          <input type="number" id="m-price" placeholder="contoh: 65000" />
+        </div>
+        <div class="form-group">
+          <label>Spec Rating (0-100)</label>
+          <input type="number" id="m-rating" min="0" max="100" placeholder="contoh: 72" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Processor</label>
+        <input type="text" id="m-processor" placeholder="contoh: 13th Gen Intel Core i5 13420H" />
+      </div>
+      <div class="form-group">
+        <label>CPU Detail</label>
+        <input type="text" id="m-cpu" placeholder="contoh: Octa Core, 12 Threads" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>RAM (GB) *</label>
+          <input type="number" id="m-ram" placeholder="contoh: 16" />
+        </div>
+        <div class="form-group">
+          <label>Tipe RAM</label>
+          <input type="text" id="m-ramtype" placeholder="contoh: DDR5" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Storage (GB) *</label>
+          <input type="number" id="m-storage" placeholder="contoh: 512" />
+        </div>
+        <div class="form-group">
+          <label>Tipe Storage</label>
+          <input type="text" id="m-romtype" placeholder="contoh: SSD" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>GPU</label>
+        <input type="text" id="m-gpu" placeholder="contoh: 6GB NVIDIA GeForce RTX 4050" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Display Size (inch)</label>
+          <input type="text" id="m-display" placeholder="contoh: 15" />
+        </div>
+        <div class="form-group">
+          <label>Resolusi</label>
+          <input type="text" id="m-resolution" placeholder="contoh: 1920x1080" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>OS</label>
+          <input type="text" id="m-os" placeholder="contoh: Windows 11 OS" />
+        </div>
+        <div class="form-group">
+          <label>Garansi (tahun)</label>
+          <input type="number" id="m-warranty" placeholder="contoh: 1" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Batal</button>
+      <button class="btn-save" onclick="saveLaptop()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+// ===================== DATA LAYER =====================
+// Load data from localStorage or use seed data from SQL
+
+const CATEGORY_META = [
+  { id:'laptop', name:'Semua', icon:'💻', table:'laptop' },
+  { id:'programmerdata', name:'Programming', icon:'👨‍💻', table:'programmerdata' },
+  { id:'datascience', name:'Data Science', icon:'📊', table:'datascience' },
+  { id:'designgraph', name:'Design & Graphic', icon:'🎨', table:'designgraph' },
+  { id:'gamingdata', name:'Gaming', icon:'🎮', table:'gamingdata' },
+  { id:'officedata', name:'Office', icon:'📄', table:'officedata' },
+];
+
+// Seed data from SQL
+const SEED = {
+  laptop: [
+    {laptop_id:1,brand:'Samsung',name:'Galaxy Book2 15 Laptop',price:74990,spec_rating:65,processor:'12th Gen Intel Core i7 1255U',cpu:'10 Cores (2P + 8E), 12 Threads',ram_gb:16,ram_type:'LPDDR4',storage_gb:512,rom_type:'SSD',gpu:'Intel Iris Xe Graphics',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:2,brand:'Asus',name:'Zenbook 14 OLED 2023 UM3402YA Laptop',price:90990,spec_rating:70,processor:'7th Gen AMD Ryzen 7 7730U',cpu:'Octa Core, 16 Threads',ram_gb:16,ram_type:'LPDDR4X',storage_gb:512,rom_type:'SSD',gpu:'AMD Radeon',display_size:'14',resolution_width:2880,resolution_height:1800,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:3,brand:'Acer',name:'Nitro V ANV15-51 Gaming Laptop',price:62990,spec_rating:64,processor:'13th Gen Intel Core i5 13420H',cpu:'Octa Core (4P + 4E), 12 Threads',ram_gb:16,ram_type:'DDR5',storage_gb:512,rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 2050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:4,brand:'HP',name:'15s-eq2132AU Laptop',price:43990,spec_rating:63,processor:'5th Gen AMD Ryzen 5 5500U',cpu:'Hexa Core, 12 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'AMD Radeon',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:5,brand:'Asus',name:'Zenbook Flip 14 OLED UP5401ZA Laptop',price:94990,spec_rating:75,processor:'12th Gen Intel Core i7 12700H',cpu:'14 Cores (6P + 8E), 20 Threads',ram_gb:16,ram_type:'LPDDR5',storage_gb:512,rom_type:'SSD',gpu:'Intel Iris Xe',display_size:'14',resolution_width:3840,resolution_height:2400,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:6,brand:'Asus',name:'Vivobook 14X OLED 2023 K3405VCB Laptop',price:93980,spec_rating:70,processor:'13th Gen Intel Core i5 13500H',cpu:'12 Cores (4P + 8E), 16 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'4GB NVIDIA Geforce RTX 3050',display_size:'14',resolution_width:2880,resolution_height:1800,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:7,brand:'Dell',name:'Inspiron 5518 Laptop',price:67999,spec_rating:65,processor:'11th Gen Intel Core i5 11320H',cpu:'Quad Core, 8 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'2GB NVIDIA GeForce MX450',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:8,brand:'HP',name:'Envy x360 13 Laptop',price:85490,spec_rating:71,processor:'12th Gen Intel Core i5 1230U',cpu:'10 Cores, 12 Threads',ram_gb:16,ram_type:'LPDDR4X',storage_gb:512,rom_type:'SSD',gpu:'Intel Iris Xe',display_size:'13',resolution_width:1920,resolution_height:1200,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:9,brand:'Lenovo',name:'IdeaPad Slim 5 82XE0072IN Laptop',price:63990,spec_rating:69,processor:'7th Gen AMD Ryzen 7 7730U',cpu:'Octa Core, 16 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'AMD Integrated SoC',display_size:'14',resolution_width:1920,resolution_height:1200,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:10,brand:'Lenovo',name:'IdeaPad 5 15ITL05 Laptop',price:74888,spec_rating:64,processor:'Intel Core i7',cpu:'Quad Core, 8 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'2GB NVIDIA GeForce MX450',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:11,brand:'Acer',name:'Aspire 5 A515-58GM Gaming Laptop',price:64990,spec_rating:65,processor:'13th Gen Intel Core i5 13420H',cpu:'Octa Core (4P + 4E), 12 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 2050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:12,brand:'Asus',name:'Vivobook S14 OLED S3402ZA Laptop',price:72490,spec_rating:62,processor:'12th Gen Intel Core i5 12500H',cpu:'12 Cores (4P + 8E), 16 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'Intel Iris Xe Graphics',display_size:'14',resolution_width:2880,resolution_height:1800,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:13,brand:'Asus',name:'Vivobook 16X 2023 K3605ZU Laptop',price:89990,spec_rating:75,processor:'12th Gen Intel Core i5 12450H',cpu:'Octa Core (4P + 4E), 12 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'6GB NVIDIA Geforce RTX 4050',display_size:'16',resolution_width:1920,resolution_height:1200,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:14,brand:'Asus',name:'Vivobook Pro 15 OLED M3500QC Gaming Laptop',price:72990,spec_rating:66,processor:'5th Gen AMD Ryzen 5 5600H',cpu:'Hexa Core, 12 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:15,brand:'Xiaomi',name:'Mi Notebook Pro X 15 Laptop',price:79990,spec_rating:65,processor:'11th Gen Intel Core i5 11300H',cpu:'Quad Core, 8 Threads',ram_gb:16,ram_type:'LPDDR4x',storage_gb:512,rom_type:'SSD',gpu:'Intel Iris Xe Graphics',display_size:'15',resolution_width:2160,resolution_height:3456,warranty:1,os:'Windows 10 OS'},
+    {laptop_id:16,brand:'Acer',name:'Nitro 5 AN515-47 Gaming Laptop',price:79990,spec_rating:72,processor:'7th Gen AMD Ryzen 7 7735HS',cpu:'Octa Core, 16 Threads',ram_gb:16,ram_type:'DDR5',storage_gb:512,rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:17,brand:'Lenovo',name:'LOQ 15IRH8 Gaming Laptop',price:96990,spec_rating:67,processor:'13th Gen Intel Core i7 13620H',cpu:'10 Cores (6P + 4E), 16 Threads',ram_gb:16,ram_type:'DDR5',storage_gb:512,rom_type:'SSD',gpu:'6GB NVIDIA GeForce RTX 4050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:18,brand:'HP',name:'Victus 15-fa0666TX Gaming Laptop',price:68990,spec_rating:65,processor:'12th Gen Intel Core i5 12450H',cpu:'Octa Core (4P + 4E), 12 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:512,rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:19,brand:'MSI',name:'GF63 Thin 11UC Gaming Laptop',price:65990,spec_rating:76,processor:'11th Gen Intel Core i7 11800H',cpu:'Octa Core, 16 Threads',ram_gb:16,ram_type:'DDR4',storage_gb:1024,rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:'15',resolution_width:1920,resolution_height:1080,warranty:1,os:'Windows 11 OS'},
+    {laptop_id:20,brand:'Dell',name:'Alienware x14 R2 Gaming Laptop',price:208990,spec_rating:72,processor:'13th Gen Intel Core i7 13620H',cpu:'10 Cores (6P + 4E), 16 Threads',ram_gb:16,ram_type:'LPDDR5',storage_gb:1024,rom_type:'SSD',gpu:'6GB NVIDIA GEFORCE RTX 4050',display_size:'14',resolution_width:2560,resolution_height:1600,warranty:1,os:'Windows 11 OS'},
+  ],
+  programmerdata: [
+    {laptop_id:2,brand:'Acer',name:'Aspire 5 A515-57G Gaming Laptop',price:52128,spec_rating:66,processor:'12th Gen Intel Core i5 1240P',cpu:'12 Cores (4P + 8E), 16 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 2050',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:8,storage_gb:512},
+    {laptop_id:3,brand:'Dell',name:'Latitude 3430 Laptop',price:108000,spec_rating:60,processor:'12th Gen Intel Core i5 1235U',cpu:'10 Cores (2P + 8E), 12 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'Intel Iris Xe Graphics',display_size:14,resolution_width:1366,resolution_height:768,os:'Windows 11 OS',warranty:'1',ram_gb:8,storage_gb:512},
+    {laptop_id:5,brand:'Lenovo',name:'IdeaPad Slim 5 82XE004RIN Laptop',price:58990,spec_rating:64,processor:'7th Gen AMD Ryzen 5 7530U',cpu:'Hexa Core, 12 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'AMD Integrated SoC',display_size:14,resolution_width:1920,resolution_height:1200,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:8,brand:'Asus',name:'Vivobook Go 14 2023 E1404FA Laptop',price:49990,spec_rating:69,processor:'7th Gen AMD Ryzen 5 7520U',cpu:'Quad Core, 8 Threads',ram_type:'LPDDR5',rom_type:'SSD',gpu:'AMD Radeon',display_size:14,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:9,brand:'Asus',name:'ROG Strix G17 G713RC Gaming Laptop',price:86189,spec_rating:71,processor:'6th Gen AMD Ryzen 7 6800H',cpu:'Octa Core, 16 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:17,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+  ],
+  datascience: [
+    {laptop_id:2,brand:'Samsung',name:'Galaxy Book2 15 Laptop',price:74990,spec_rating:65,processor:'12th Gen Intel Core i7 1255U',cpu:'10 Cores (2P + 8E), 12 Threads',ram_type:'LPDDR4',rom_type:'SSD',gpu:'Intel Iris Xe Graphics',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:3,brand:'Asus',name:'Zenbook 14 OLED 2023 UM3402YA Laptop',price:90990,spec_rating:70,processor:'7th Gen AMD Ryzen 7 7730U',cpu:'Octa Core, 16 Threads',ram_type:'LPDDR4X',rom_type:'SSD',gpu:'AMD Radeon',display_size:14,resolution_width:2880,resolution_height:1800,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:6,brand:'Asus',name:'Zenbook Flip 14 OLED UP5401ZA Laptop',price:94990,spec_rating:75,processor:'12th Gen Intel Core i7 12700H',cpu:'14 Cores (6P + 8E), 20 Threads',ram_type:'LPDDR5',rom_type:'SSD',gpu:'Intel Iris Xe',display_size:14,resolution_width:3840,resolution_height:2400,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:19,brand:'Acer',name:'Nitro 5 AN515-47 Gaming Laptop',price:79990,spec_rating:72,processor:'7th Gen AMD Ryzen 7 7735HS',cpu:'Octa Core, 16 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:20,brand:'Lenovo',name:'LOQ 15IRH8 Gaming Laptop',price:96990,spec_rating:67,processor:'13th Gen Intel Core i7 13620H',cpu:'10 Cores (6P + 4E), 16 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'6GB NVIDIA GeForce RTX 4050',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+  ],
+  designgraph: [
+    {laptop_id:2,brand:'Samsung',name:'Galaxy Book 3 Ultra NP960XFH Laptop',price:281990,spec_rating:82,processor:'13th Gen Intel Core i9 13900H',cpu:'14 Cores (6P + 8E), 20 Threads',ram_type:'LPDDR5',rom_type:'SSD',gpu:'NVIDIA GeForce RTX 4070',display_size:16,resolution_width:2880,resolution_height:1800,os:'Windows 11 OS',warranty:'1',ram_gb:32,storage_gb:1024},
+    {laptop_id:5,brand:'Asus',name:'ROG Zephyrus Duo 16 2022 Gaming Laptop',price:339990,spec_rating:85,processor:'6th Gen AMD Ryzen 9 6900HX',cpu:'Octa Core, 16 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'16GB NVIDIA GeForce RTX 3080 Ti',display_size:16,resolution_width:2560,resolution_height:1600,os:'Windows 11 OS',warranty:'1',ram_gb:32,storage_gb:2048},
+    {laptop_id:9,brand:'Lenovo',name:'Legion Slim 5 16APH8 Gaming Laptop',price:127990,spec_rating:83,processor:'7th Gen AMD Ryzen 7 7840HS',cpu:'Octa Core, 16 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'8GB NVIDIA GeForce RTX 4060',display_size:16,resolution_width:2560,resolution_height:1600,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:16,brand:'HP',name:'ZBook Studio G9 WUXGA Workstation Laptop',price:234990,spec_rating:83,processor:'12th Gen Intel Core i7 12700H',cpu:'14 Cores (6P + 8E), 20 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'8GB NVIDIA GeForce RTX 3070 Ti',display_size:16,resolution_width:1920,resolution_height:1200,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:1024},
+  ],
+  gamingdata: [
+    {laptop_id:2,brand:'Lenovo',name:'IdeaPad Gaming 3 82SB00V5IN Laptop',price:74990,spec_rating:67,processor:'6th Gen AMD Ryzen 7 6800H',cpu:'Octa Core, 16 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 3050',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:8,storage_gb:512},
+    {laptop_id:3,brand:'Acer',name:'Predator 16 NH.QLUSI.005 Laptop',price:159990,spec_rating:79,processor:'13th Gen Intel Core i9 13900HX',cpu:'24 Cores (8P + 16E), 32 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'8GB NVIDIA GeForce RTX 4060',display_size:16,resolution_width:2560,resolution_height:1600,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:1024},
+    {laptop_id:14,brand:'MSI',name:'Vector GP68HX 13VH-072IN Gaming Laptop',price:284990,spec_rating:89,processor:'13th Gen Intel Core i9 13980HX',cpu:'24 Cores (8P + 16E), 32 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'12GB NVIDIA GeForce RTX 4080',display_size:16,resolution_width:2560,resolution_height:1600,os:'Windows 11 OS',warranty:'2',ram_gb:32,storage_gb:1024},
+    {laptop_id:20,brand:'MSI',name:'Bravo 15 C7VEK-088IN Gaming Laptop',price:94990,spec_rating:77,processor:'7th Gen AMD Ryzen 7 7735HS',cpu:'Octa Core, 16 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'6GB Nvidia GeForce RTX 4050',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:1024},
+    {laptop_id:21,brand:'Acer',name:'Aspire 7 A715-76G Gaming Laptop',price:53990,spec_rating:69,processor:'12th Gen Intel Core i5 12450H',cpu:'Octa Core (4P + 4E), 12 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'4GB NVIDIA GeForce GTX 1650',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+  ],
+  officedata: [
+    {laptop_id:7,brand:'Lenovo',name:'IdeaPad 3 15ITL05 81X800N2IN Laptop',price:35490,spec_rating:69,processor:'11th Gen Intel Core i3 1115G4',cpu:'Dual Core, 4 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'Intel Iris Xe Graphics',display_size:15,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:8,storage_gb:512},
+    {laptop_id:8,brand:'Asus',name:'VivoBook 14 X415EA-EK326WS Notebook',price:30990,spec_rating:69,processor:'11th Gen Intel Core i3 1115G4',cpu:'Dual Core, 4 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'Intel Integrated Intel UHD',display_size:14,resolution_width:1920,resolution_height:1080,os:'Windows 11 OS',warranty:'1',ram_gb:8,storage_gb:512},
+    {laptop_id:3,brand:'Asus',name:'Vivobook 16X 2023 K3605ZF Laptop',price:62990,spec_rating:72,processor:'12th Gen Intel Core i5 12450H',cpu:'Octa Core (4P + 4E), 12 Threads',ram_type:'DDR4',rom_type:'SSD',gpu:'4GB NVIDIA GeForce RTX 2050',display_size:16,resolution_width:1920,resolution_height:1200,os:'Windows 11 OS',warranty:'1',ram_gb:16,storage_gb:512},
+    {laptop_id:9,brand:'Lenovo',name:'Legion Pro 7i 2023 Gaming Laptop',price:286200,spec_rating:82,processor:'13th Gen Intel Core i9 13900HX',cpu:'24 Cores (8P + 16E), 32 Threads',ram_type:'DDR5',rom_type:'SSD',gpu:'12GB NVIDIA Geforce RTX 4080',display_size:16,resolution_width:2560,resolution_height:1600,os:'Windows 11 OS',warranty:'1',ram_gb:32,storage_gb:1024},
+  ],
+};
+
+// ===================== STATE =====================
+let db = {}; // { laptop: [...], programmerdata: [...], ... }
+let users = [];
+let currentUser = null;
+let currentPage = 'dashboard';
+let previousPage = 'dashboard';
+let compareBox = []; // max 3
+let activeCatFilter = 'laptop';
+let laptopCurrentPage = 1;
+const ROWS_PER_PAGE = 10;
+
+// ===================== INIT =====================
+function initDB() {
+  const stored = localStorage.getItem('specduel_db');
+  if (stored) {
+    db = JSON.parse(stored);
+  } else {
+    db = JSON.parse(JSON.stringify(SEED));
+    saveDB();
+  }
+  const storedUsers = localStorage.getItem('specduel_users');
+  if (storedUsers) {
+    users = JSON.parse(storedUsers);
+  } else {
+    users = [{ username: 'admin', password: 'admin123', name: 'Admin' }];
+    saveUsers();
+  }
+}
+
+function saveDB() { localStorage.setItem('specduel_db', JSON.stringify(db)); }
+function saveUsers() { localStorage.setItem('specduel_users', JSON.stringify(users)); }
+
+// ===================== AUTH =====================
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('login-form').style.display = tab==='login' ? 'block':'none';
+  document.getElementById('register-form').style.display = tab==='register' ? 'block':'none';
+}
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const found = users.find(x => x.username===u && x.password===p);
+  if (!found) { document.getElementById('login-error').style.display='block'; return; }
+  currentUser = found;
+  document.getElementById('login-error').style.display='none';
+  launchApp();
+}
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const u = document.getElementById('reg-user').value.trim();
+  const p = document.getElementById('reg-pass').value;
+  const err = document.getElementById('reg-error');
+  if (!name||!u||!p) { err.textContent='Semua field wajib diisi.'; err.style.display='block'; return; }
+  if (p.length < 6) { err.textContent='Password minimal 6 karakter.'; err.style.display='block'; return; }
+  if (users.find(x=>x.username===u)) { err.textContent='Username sudah digunakan.'; err.style.display='block'; return; }
+  const newUser = { username:u, password:p, name };
+  users.push(newUser); saveUsers();
+  currentUser = newUser;
+  err.style.display='none';
+  launchApp();
+}
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+  compareBox = [];
+}
+function launchApp() {
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('user-display-name').textContent = currentUser.name;
+  document.getElementById('user-avatar-txt').textContent = currentUser.name.charAt(0).toUpperCase();
+  renderDashboard();
+  goPage('dashboard', document.querySelector('[data-page="dashboard"]'));
+}
+
+// ===================== NAVIGATION =====================
+function goPage(page, btn) {
+  previousPage = currentPage;
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (page==='laptops') renderLaptopTable();
+  if (page==='categories') renderCategories();
+  if (page==='dashboard') renderDashboard();
+}
+function goBack() {
+  goPage(previousPage, document.querySelector('[data-page="'+previousPage+'"]'));
+}
+
+// ===================== DASHBOARD =====================
+function renderDashboard() {
+  const laptops = db.laptop || [];
+  document.getElementById('stat-total').textContent = laptops.length;
+  const brands = [...new Set(laptops.map(l=>l.brand))];
+  document.getElementById('stat-brands').textContent = brands.length;
+  const avgR = laptops.length ? Math.round(laptops.reduce((a,b)=>a+(b.spec_rating||0),0)/laptops.length) : 0;
+  document.getElementById('stat-avgrating').textContent = avgR;
+  const avgP = laptops.length ? Math.round(laptops.reduce((a,b)=>a+(b.price||0),0)/laptops.length) : 0;
+  document.getElementById('stat-avgprice').textContent = fmtPrice(avgP);
+
+  // Category grid
+  const catGrid = document.getElementById('cat-grid-dash');
+  catGrid.innerHTML = CATEGORY_META.slice(1).map(c=>`
+    <div class="cat-card" onclick="goPage('categories',null);setActiveCat('${c.id}')">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${(db[c.table]||[]).length} laptop</div>
+    </div>`).join('');
+
+  // Recent laptops
+  const tbody = document.getElementById('dash-table');
+  const recent = laptops.slice(0,8);
+  tbody.innerHTML = recent.map(l=>`
+    <tr>
+      <td><strong>${l.name}</strong></td>
+      <td><span class="brand-badge">${l.brand}</span></td>
+      <td class="price-text">₹${fmtPrice(l.price)}</td>
+      <td><div class="rating-bar"><div class="rating-fill" style="width:${l.spec_rating||0}px;max-width:80px"></div><span class="rating-num">${l.spec_rating}/100</span></div></td>
+      <td>${l.ram_gb}GB ${l.ram_type} / ${l.storage_gb}GB ${l.rom_type}</td>
+    </tr>`).join('');
+}
+
+// ===================== LAPTOP TABLE =====================
+function getFilteredLaptops() {
+  let data = [...(db.laptop||[])];
+  const q = (document.getElementById('search-input')||{}).value||'';
+  const brand = (document.getElementById('filter-brand')||{}).value||'';
+  const sort = (document.getElementById('filter-sort')||{}).value||'';
+  if (q) data = data.filter(l=>(l.name+l.brand).toLowerCase().includes(q.toLowerCase()));
+  if (brand) data = data.filter(l=>l.brand===brand);
+  if (sort==='price-asc') data.sort((a,b)=>a.price-b.price);
+  else if (sort==='price-desc') data.sort((a,b)=>b.price-a.price);
+  else if (sort==='rating-desc') data.sort((a,b)=>b.spec_rating-a.spec_rating);
+  else if (sort==='name-asc') data.sort((a,b)=>a.name.localeCompare(b.name));
+  return data;
+}
+
+function renderLaptopTable() {
+  const data = getFilteredLaptops();
+  const total = data.length;
+  const totalPages = Math.ceil(total/ROWS_PER_PAGE);
+  if (laptopCurrentPage > totalPages) laptopCurrentPage = 1;
+  const slice = data.slice((laptopCurrentPage-1)*ROWS_PER_PAGE, laptopCurrentPage*ROWS_PER_PAGE);
+
+  // Populate brand filter
+  const brandSel = document.getElementById('filter-brand');
+  const selectedBrand = brandSel.value;
+  const brands = [...new Set((db.laptop||[]).map(l=>l.brand))].sort();
+  brandSel.innerHTML = '<option value="">Semua Brand</option>' + brands.map(b=>`<option value="${b}" ${b===selectedBrand?'selected':''}>${b}</option>`).join('');
+
+  const tbody = document.getElementById('laptop-table');
+  if (!slice.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada data ditemukan.</td></tr>`;
+  } else {
+    tbody.innerHTML = slice.map((l,i)=>{
+      const inBox = compareBox.some(x=>x.laptop_id===l.laptop_id);
+      return `<tr>
+        <td style="color:var(--text-muted)">${(laptopCurrentPage-1)*ROWS_PER_PAGE+i+1}</td>
+        <td><span style="cursor:pointer;color:var(--accent);font-weight:600" onclick="showDetail(${l.laptop_id},'laptop')">${l.name}</span></td>
+        <td><span class="brand-badge">${l.brand}</span></td>
+        <td class="price-text">₹${fmtPrice(l.price)}</td>
+        <td><div class="rating-bar"><div class="rating-fill" style="width:${Math.min((l.spec_rating||0)*0.7,70)}px"></div><span class="rating-num">${l.spec_rating}/100</span></div></td>
+        <td>${l.ram_gb}GB ${l.ram_type||''}</td>
+        <td>${l.storage_gb}GB ${l.rom_type||''}</td>
+        <td style="font-size:12px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${l.gpu}">${l.gpu||'-'}</td>
+        <td><div class="action-btns">
+          <button class="btn-icon compare-add ${inBox?'in-box':''}" title="${inBox?'Hapus dari Compare Box':'Tambah ke Compare Box'}" onclick="toggleCompare(${l.laptop_id},'laptop',this)">⚖️</button>
+          <button class="btn-icon" title="Detail" onclick="showDetail(${l.laptop_id},'laptop')">👁</button>
+          <button class="btn-icon" title="Edit" onclick="openEditModal(${l.laptop_id})">✏️</button>
+          <button class="btn-icon danger" title="Hapus" onclick="deleteLaptop(${l.laptop_id})">🗑</button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Pagination
+  const pg = document.getElementById('pagination');
+  if (totalPages<=1) { pg.innerHTML=''; return; }
+  let html = '';
+  for (let i=1;i<=totalPages;i++) {
+    html+=`<button class="page-btn ${i===laptopCurrentPage?'active':''}" onclick="laptopCurrentPage=${i};renderLaptopTable()">${i}</button>`;
+  }
+  pg.innerHTML = html;
+}
+
+// ===================== CATEGORIES =====================
+function setActiveCat(id) {
+  activeCatFilter = id;
+  renderCatTable();
+  // Update active state
+  document.querySelectorAll('#cat-grid-main .cat-card').forEach(c=>{
+    c.classList.toggle('active', c.dataset.catid===id);
+  });
+}
+function renderCategories() {
+  const catGrid = document.getElementById('cat-grid-main');
+  catGrid.innerHTML = CATEGORY_META.slice(1).map(c=>`
+    <div class="cat-card ${activeCatFilter===c.id?'active':''}" data-catid="${c.id}" onclick="setActiveCat('${c.id}');this.parentElement.querySelectorAll('.cat-card').forEach(x=>x.classList.remove('active'));this.classList.add('active')">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${(db[c.id]||[]).length} laptop</div>
+    </div>`).join('');
+  renderCatTable();
+}
+function renderCatTable() {
+  const q = (document.getElementById('cat-search')||{}).value||'';
+  const table = activeCatFilter==='laptop'?'laptop':activeCatFilter;
+  let data = [...(db[table]||[])];
+  if (q) data = data.filter(l=>(l.name+l.brand).toLowerCase().includes(q.toLowerCase()));
+  const tbody = document.getElementById('cat-table');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">Tidak ada laptop dalam kategori ini.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map((l,i)=>{
+    const inBox = compareBox.some(x=>x.laptop_id===l.laptop_id && x._table===table);
+    return `<tr>
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td><span style="cursor:pointer;color:var(--accent);font-weight:600" onclick="showDetail(${l.laptop_id},'${table}')">${l.name}</span></td>
+      <td><span class="brand-badge">${l.brand}</span></td>
+      <td class="price-text">₹${fmtPrice(l.price)}</td>
+      <td><div class="rating-bar"><div class="rating-fill" style="width:${Math.min((l.spec_rating||0)*0.7,70)}px"></div><span class="rating-num">${l.spec_rating}/100</span></div></td>
+      <td style="font-size:12px">${l.processor||'-'}</td>
+      <td>${l.ram_gb}GB / ${l.storage_gb}GB</td>
+      <td><div class="action-btns">
+        <button class="btn-icon compare-add ${inBox?'in-box':''}" onclick="toggleCompare(${l.laptop_id},'${table}',this)">⚖️</button>
+        <button class="btn-icon" onclick="showDetail(${l.laptop_id},'${table}')">👁</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ===================== DETAIL =====================
+function showDetail(id, table) {
+  previousPage = currentPage;
+  const data = (db[table]||[]).find(l=>l.laptop_id===id);
+  if (!data) return;
+  const catMeta = CATEGORY_META.find(c=>c.table===table||c.id===table);
+  const inBox = compareBox.some(x=>x.laptop_id===id && x._table===table);
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-header">
+      <div>
+        <div class="detail-badge">${catMeta?catMeta.icon:''} ${catMeta?catMeta.name:''}</div>
+        <div class="detail-name">${data.name}</div>
+        <span class="brand-badge" style="margin-right:8px">${data.brand}</span>
+        <span style="color:var(--text-dim);font-size:13px">Garansi: ${data.warranty} tahun</span>
+      </div>
+      <div>
+        <div class="detail-price">₹${fmtPrice(data.price)}</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn-add" onclick="toggleCompare(${id},'${table}',this)" id="det-cmp-btn">${inBox?'✓ Dalam Compare Box':'+ Tambah ke Compare'}</button>
+        </div>
+      </div>
+    </div>
+    <div class="spec-grid">
+      <div class="spec-card"><div class="spec-icon">🔧</div><div><div class="spec-key">Processor</div><div class="spec-val">${data.processor||'-'}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">⚙️</div><div><div class="spec-key">CPU</div><div class="spec-val">${data.cpu||'-'}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">💾</div><div><div class="spec-key">RAM</div><div class="spec-val">${data.ram_gb}GB ${data.ram_type||''}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">💿</div><div><div class="spec-key">Storage</div><div class="spec-val">${data.storage_gb}GB ${data.rom_type||''}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">🎮</div><div><div class="spec-key">GPU</div><div class="spec-val">${data.gpu||'-'}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">🖥️</div><div><div class="spec-key">Display</div><div class="spec-val">${data.display_size}" — ${data.resolution_width}×${data.resolution_height}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">💻</div><div><div class="spec-key">OS</div><div class="spec-val">${data.os||'-'}</div></div></div>
+      <div class="spec-card"><div class="spec-icon">⭐</div><div><div class="spec-key">Spec Rating</div><div class="spec-val">${data.spec_rating}/100</div></div></div>
+    </div>`;
+  goPage('detail', null);
+}
+
+// ===================== CRUD =====================
+function openAddModal() {
+  document.getElementById('modal-title').textContent = 'Tambah Laptop';
+  document.getElementById('modal-id').value = '';
+  ['brand','name','price','rating','processor','cpu','ram','ramtype','storage','romtype','gpu','display','resolution','os','warranty']
+    .forEach(f=>{ const el=document.getElementById('m-'+f); if(el) el.value=''; });
+  document.getElementById('laptop-modal').style.display='flex';
+}
+function openEditModal(id) {
+  const l = (db.laptop||[]).find(x=>x.laptop_id===id);
+  if (!l) return;
+  document.getElementById('modal-title').textContent = 'Edit Laptop';
+  document.getElementById('modal-id').value = id;
+  document.getElementById('m-brand').value = l.brand||'';
+  document.getElementById('m-name').value = l.name||'';
+  document.getElementById('m-price').value = l.price||'';
+  document.getElementById('m-rating').value = l.spec_rating||'';
+  document.getElementById('m-processor').value = l.processor||'';
+  document.getElementById('m-cpu').value = l.cpu||'';
+  document.getElementById('m-ram').value = l.ram_gb||'';
+  document.getElementById('m-ramtype').value = l.ram_type||'';
+  document.getElementById('m-storage').value = l.storage_gb||'';
+  document.getElementById('m-romtype').value = l.rom_type||'';
+  document.getElementById('m-gpu').value = l.gpu||'';
+  document.getElementById('m-display').value = l.display_size||'';
+  const res = `${l.resolution_width||''}x${l.resolution_height||''}`;
+  document.getElementById('m-resolution').value = res==='x'?'':res;
+  document.getElementById('m-os').value = l.os||'';
+  document.getElementById('m-warranty').value = l.warranty||'';
+  document.getElementById('laptop-modal').style.display='flex';
+}
+function closeModal() { document.getElementById('laptop-modal').style.display='none'; }
+function closeModalOutside(e) { if(e.target===document.getElementById('laptop-modal')) closeModal(); }
+
+function saveLaptop() {
+  const brand = document.getElementById('m-brand').value.trim();
+  const name = document.getElementById('m-name').value.trim();
+  const price = parseInt(document.getElementById('m-price').value)||0;
+  const rating = parseInt(document.getElementById('m-rating').value)||0;
+  if (!brand||!name) { showToast('Brand dan Nama wajib diisi!','error'); return; }
+  const resParts = (document.getElementById('m-resolution').value||'').split('x');
+  const obj = {
+    brand, name, price, spec_rating: rating,
+    processor: document.getElementById('m-processor').value.trim(),
+    cpu: document.getElementById('m-cpu').value.trim(),
+    ram_gb: parseInt(document.getElementById('m-ram').value)||0,
+    ram_type: document.getElementById('m-ramtype').value.trim(),
+    storage_gb: parseInt(document.getElementById('m-storage').value)||0,
+    rom_type: document.getElementById('m-romtype').value.trim(),
+    gpu: document.getElementById('m-gpu').value.trim(),
+    display_size: document.getElementById('m-display').value.trim(),
+    resolution_width: parseInt(resParts[0])||0,
+    resolution_height: parseInt(resParts[1])||0,
+    os: document.getElementById('m-os').value.trim(),
+    warranty: parseInt(document.getElementById('m-warranty').value)||1,
+  };
+  const editId = document.getElementById('modal-id').value;
+  if (editId) {
+    const idx = db.laptop.findIndex(x=>x.laptop_id==editId);
+    if (idx>-1) { db.laptop[idx] = {...db.laptop[idx], ...obj}; }
+    showToast('Laptop berhasil diperbarui!','success');
+  } else {
+    const maxId = Math.max(0,...(db.laptop||[]).map(x=>x.laptop_id));
+    obj.laptop_id = maxId+1;
+    if (!db.laptop) db.laptop=[];
+    db.laptop.push(obj);
+    showToast('Laptop berhasil ditambahkan!','success');
+  }
+  saveDB();
+  closeModal();
+  renderLaptopTable();
+}
+function deleteLaptop(id) {
+  if (!confirm('Yakin ingin menghapus laptop ini?')) return;
+  db.laptop = (db.laptop||[]).filter(x=>x.laptop_id!==id);
+  compareBox = compareBox.filter(x=>x.laptop_id!==id);
+  saveDB();
+  updateCompareUI();
+  renderLaptopTable();
+  showToast('Laptop dihapus.','info');
+}
+
+// ===================== COMPARE BOX =====================
+function toggleDrawer() {
+  document.getElementById('compare-drawer').classList.toggle('open');
+}
+function toggleCompare(id, table, btn) {
+  const existing = compareBox.findIndex(x=>x.laptop_id===id && x._table===table);
+  if (existing>-1) {
+    compareBox.splice(existing,1);
+    if(btn) { btn.classList.remove('in-box'); btn.title='Tambah ke Compare Box'; }
+    showToast('Dihapus dari Compare Box.','info');
+  } else {
+    if (compareBox.length>=3) { showToast('Maksimal 3 laptop yang bisa dibandingkan!','error'); return; }
+    const data = (db[table]||[]).find(l=>l.laptop_id===id);
+    if (!data) return;
+    compareBox.push({...data, _table:table});
+    if(btn) { btn.classList.add('in-box'); btn.title='Hapus dari Compare Box'; }
+    // Update detail btn
+    const detBtn=document.getElementById('det-cmp-btn');
+    if(detBtn) detBtn.textContent='✓ Dalam Compare Box';
+    showToast(`"${data.name.substring(0,30)}..." ditambahkan!`,'success');
+  }
+  updateCompareUI();
+}
+function updateCompareUI() {
+  const count = compareBox.length;
+  document.getElementById('compare-count-badge').textContent = count;
+  const slots = document.getElementById('compare-slots');
+  let html = '';
+  for (let i=0;i<3;i++) {
+    const l = compareBox[i];
+    if (l) {
+      html+=`<div class="compare-slot filled">
+        <div class="slot-info">
+          <div class="slot-name">${l.name}</div>
+          <div class="slot-brand">${l.brand}</div>
+        </div>
+        <button class="slot-remove" onclick="removeFromBox(${i})">✕</button>
+      </div>`;
+    } else {
+      html+=`<div class="compare-slot"><span class="slot-empty">Slot ${i+1} — kosong</span></div>`;
+    }
+  }
+  slots.innerHTML = html;
+  const hint = document.getElementById('compare-hint-text');
+  const goBtn = document.getElementById('compare-go-btn');
+  if (count<2) { hint.textContent=`Pilih ${2-count} laptop lagi untuk mulai membandingkan.`; goBtn.disabled=true; }
+  else { hint.textContent=`${count} laptop siap dibandingkan. Klik tombol di bawah!`; goBtn.disabled=false; }
+}
+function removeFromBox(idx) {
+  compareBox.splice(idx,1);
+  updateCompareUI();
+  renderLaptopTable();
+  renderCatTable();
+}
+function clearCompareBox() {
+  compareBox=[];
+  updateCompareUI();
+  renderLaptopTable();
+  renderCatTable();
+  showToast('Compare Box dikosongkan.','info');
+}
+function doCompare() {
+  if (compareBox.length<2) return;
+  toggleDrawer();
+  previousPage = currentPage;
+  document.getElementById('compare-sub').textContent = `Membandingkan ${compareBox.length} laptop.`;
+
+  const specs = [
+    { key:'price', label:'Harga (₹)', fmt: v=>'₹'+fmtPrice(v), best:'lowest' },
+    { key:'spec_rating', label:'Spec Rating', fmt: v=>v+'/100', best:'highest' },
+    { key:'processor', label:'Processor', fmt: v=>v||'-', best:'none' },
+    { key:'cpu', label:'CPU', fmt: v=>v||'-', best:'none' },
+    { key:'ram_gb', label:'RAM', fmt: v=>v+'GB', best:'highest' },
+    { key:'ram_type', label:'Tipe RAM', fmt: v=>v||'-', best:'none' },
+    { key:'storage_gb', label:'Storage', fmt: v=>v+'GB', best:'highest' },
+    { key:'rom_type', label:'Tipe Storage', fmt: v=>v||'-', best:'none' },
+    { key:'gpu', label:'GPU', fmt: v=>v||'-', best:'none' },
+    { key:'display_size', label:'Display Size', fmt: v=>v+'"', best:'none' },
+    { key:'resolution_width', label:'Resolusi', fmt: (v,l)=>l.resolution_width+'×'+l.resolution_height, best:'none' },
+    { key:'os', label:'OS', fmt: v=>v||'-', best:'none' },
+    { key:'warranty', label:'Garansi', fmt: v=>v+' tahun', best:'highest' },
+  ];
+
+  let html = '<thead><tr><th class="spec-label">Spesifikasi</th>';
+  compareBox.forEach(l=>{
+    html+=`<th class="laptop-header"><div class="laptop-header-name">${l.name}</div><div class="laptop-header-brand">${l.brand}</div></th>`;
+  });
+  html+='</tr></thead><tbody>';
+
+  specs.forEach((spec,si)=>{
+    const values = compareBox.map(l=>l[spec.key]);
+    let winnerIdx = -1;
+    if (spec.best==='highest') {
+      const maxVal = Math.max(...values.filter(v=>v!=null&&!isNaN(v)));
+      winnerIdx = values.findIndex(v=>v===maxVal);
+    } else if (spec.best==='lowest') {
+      const minVal = Math.min(...values.filter(v=>v!=null&&!isNaN(v)));
+      winnerIdx = values.findIndex(v=>v===minVal);
+    }
+    html+=`<tr ${si%2===0?'class="highlight-row"':''}>
+      <td class="spec-label">${spec.label}</td>`;
+    compareBox.forEach((l,i)=>{
+      const displayVal = spec.key==='resolution_width' ? spec.fmt(l[spec.key],l) : spec.fmt(l[spec.key]);
+      html+=`<td class="${i===winnerIdx?'winner':''}">${displayVal}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('compare-result-table').innerHTML = html;
+  goPage('compare', null);
+}
+
+// ===================== UTILS =====================
+function fmtPrice(v) { return v ? v.toLocaleString('en-IN') : '0'; }
+function showToast(msg, type='info') {
+  const w = document.getElementById('toast-wrap');
+  const t = document.createElement('div');
+  t.className=`toast ${type}`; t.textContent=msg;
+  w.appendChild(t);
+  setTimeout(()=>t.remove(), 3200);
+}
+
+// ===================== BOOTSTRAP =====================
+initDB();
+updateCompareUI();
+</script>
+</body>
+</html>
